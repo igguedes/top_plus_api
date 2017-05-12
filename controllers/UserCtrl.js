@@ -20,10 +20,7 @@ UserCtrl.post = function(req, res){
 	newUser.save(function(err, login){
 		if(!err){
 			res.send("Sucesso");
-		}else{
-			res.sendStatus(500);
 		}
-
 	});
 }
 
