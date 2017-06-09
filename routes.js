@@ -16,8 +16,9 @@ router.use(function (req, res, next) {
 });
 
 //Users
-router.post('/login', UserCtrl.post);
+router.post('/user', UserCtrl.post);
 router.get('/followers', Auth.getToken , UserCtrl.getFollowers);
+router.put('/follow/follower/:followeId/following/:followingId', UserCtrl.followUser);
 
 
 module.exports = router;

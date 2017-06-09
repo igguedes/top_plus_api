@@ -12,7 +12,9 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
+    "fawn": "^1.2.3",
     "mongoose": "^4.9.7",
+    "mongoose-transaction": "0.0.3",
     "socket.io": "^1.7.3"
   }
 }

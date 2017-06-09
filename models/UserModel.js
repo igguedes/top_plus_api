@@ -5,9 +5,8 @@ var UserSchema = new Schema({
 	celNumber: String,
 	userName: String,
 	active: Boolean,
-	token: String,
 	status: String,
-	adrees: {
+	address: {
 		city: String,
 		state: String,
 		country: String
@@ -22,6 +21,20 @@ var UserSchema = new Schema({
 		{
 			follower : { type: Schema.Types.ObjectId, ref: 'User' },
 			followerDate: Date
+		}
+	],
+	depoiments: [
+		{
+			from : { type: Schema.Types.ObjectId, ref: 'User' },
+			date: Date,
+			message: String
+		}
+	],
+	advices: [
+		{
+			from : { type: Schema.Types.ObjectId, ref: 'User' },
+			date: Date,
+			message: String
 		}
 	]
 
