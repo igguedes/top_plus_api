@@ -18,11 +18,14 @@ UserCtrl.post = function(req, res){
 
 	newUser.save(function(err, user){
 		if(!err){
+<<<<<<< HEAD
 			res.status(200).json({msg: "Inserido com sucesso"});
 		}else{
 			res.status(500).json({error:err});
+=======
+			res.send("Sucesso");
+>>>>>>> 069067d1c35ba0cdf56a60cc168b6e9e27c1e4a6
 		}
-
 	});
 }
 
