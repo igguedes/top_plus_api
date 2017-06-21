@@ -1,5 +1,7 @@
 var Config = require('../config/Config');
 var mongoose = require('mongoose');
+var Fawn = require('fawn');
+mongoose.Promise = require('bluebird');
 
 var db = mongoose.connection;
 
@@ -12,5 +14,6 @@ db.once('open', function(){
 });
 
 mongoose.connect(Config.DB);
+Fawn.init(mongoose);
 
 module.exports = mongoose;

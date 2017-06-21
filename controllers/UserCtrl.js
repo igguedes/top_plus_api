@@ -1,10 +1,12 @@
 var User = require('../models/UserModel');
 var UserCtrl = {};
-var Fawn = require('../models/Transaction');
+var Fawn = require('fawn');
 
+//var Transaction = require('mongoose-transaction')(User);
 
 UserCtrl.post = function(req, res){
 	user = req.body;
+	console.log(user);
 	var newUser = new User();
 	newUser.celNumber = user.celNumber;
 	newUser.userName = user.userName;
@@ -13,8 +15,6 @@ UserCtrl.post = function(req, res){
 	newUser.address.city = user.city;
 	newUser.address.state = user.state;
 	newUser.address.country = user.country;
-
-
 
 	newUser.save(function(err, user){
 		if(!err){
@@ -48,36 +48,47 @@ UserCtrl.getFollowing = function(req, res){
 }
 
 UserCtrl.followUser = function(req, res){
-	var followingId = req.params.followingId;
-	var followerId = req.params.followerId;
+	//console.log(req.params);
+	var FollowingId = req.params.followingId;
+	console.log('FollowingID: ',FollowingId);
+	var FollowerId = req.params.followerId;
+	console.log('FollowerID: ', FollowerId);
+	if(FollowerId === undefined || FollowingId === undefined){
+		return res.status(400).json({msg: "Falha na operacao - id não encontrado"});
+	}
 	var task = Fawn.Task();
-	// transaction.update('User',{_id: followingId,$push:{followers: {follower: followerId, date: new Date}}});
-	// transaction.update('User',{_id: followerId, $push:{following: {following: followingId, date: new Date}}});
-	// transaction.run(function(error, response){
-	// 	if(!error){
-	// 		res.status(200).json({msg: "Operacao finalizada"});
-	// 	}else{
-	// 		res.status(400).json({msg: "Falha na operacao", error: error});
-	// 	}
-	// 	console.log(error);
-	// });
-	// User.findOneAndUpdate(
-	// 	{_id:followingId},
-	// 	{$push:{followers: {follower: followerId, date: new Date}}}
-	// )
-	// .exec(function(error, result){
-	// 	if(!error){
-	// 		res.status(200).json({msg: "Operacao finalizada"});
-	// 	}else{
-	// 		res.status(400).json({msg: "Falha na operacao", error: error});
-	// 	}
-	// });
-	task.update('User',{_id: followingId,$push:{followers: {follower: followerId, date: new Date}}});
-	task.run()
+	task.update('User',{_id: FollowerId}, 
+	{ 
+		$push : {
+			followers: { 
+				$each : [{
+					follower: FollowingId,
+					followerDate: new Date
+				}]
+			}
+		}
+	})
+	task.update('User',{_id: FollowingId},
+	{
+		$push : {
+			following : {
+				$each : [{
+					following : FollowerId,
+					followingDate : new Date
+				}]
+			}
+		}
+		
+	})
+	.run()
 	.then(function(result){
-		console.log(result);
-	}).catch(function(error){
-		console.log(error);
+			var firt = result[0];
+			var second = result[1];
+			res.status(200).json({msg: "Operacao finalizada"});
+	})
+	.catch(function(err){
+		res.status(400).json({msg: "Falha na operacao", err: err});
+		console.log(err);
 	});
 }	
 
